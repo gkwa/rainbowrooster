@@ -19,15 +19,24 @@ class MarkdownWriter:
         *,
         outdir: str = ".",
     ) -> None:
-        """Write a markdown file with frontmatter."""
+        """Write a markdown file with frontmatter.
+
+        Preserves existing frontmatter values and only adds new key-value pairs.
+        If a key already exists in the file, its value will not be overwritten.
+        """
         outdir_path = pathlib.Path(outdir)
         outdir_path.mkdir(parents=True, exist_ok=True)
 
         file_path = outdir_path / filename
 
         try:
+            # Read any existing frontmatter from the file
             existing_data = self._read_existing_frontmatter(file_path)
-            merged_data = {**existing_data, **frontmatter_data}
+
+            # Merge data: existing values take precedence, new keys are added
+            # The order is important: frontmatter_data first, then existing_data
+            # This ensures existing values are preserved and only new keys are added
+            merged_data = {**frontmatter_data, **existing_data}
 
             post = frontmatter.Post("", **merged_data)
             content = frontmatter.dumps(post)
@@ -48,7 +57,11 @@ class MarkdownWriter:
     def _read_existing_frontmatter(
         file_path: pathlib.Path,
     ) -> dict[str, typing.Any]:
-        """Read existing frontmatter from a file if it exists."""
+        """Read existing frontmatter from a file if it exists.
+
+        Returns an empty dictionary if the file doesn't exist or if frontmatter
+        cannot be parsed.
+        """
         logger = logging.getLogger(__name__)
 
         if not file_path.exists():
