@@ -21,8 +21,10 @@ class MarkdownWriter:
     ) -> None:
         """Write a markdown file with frontmatter.
 
-        Preserves existing frontmatter values and only adds new key-value pairs.
-        If a key already exists in the file, its value will not be overwritten.
+        Preserves existing frontmatter values and file content, only adding new
+        key-value pairs. If a key already exists in the file, its value will not
+        be overwritten. New keys from frontmatter_data will be merged in if they
+        don't exist. The existing content body of the file is preserved.
         """
         outdir_path = pathlib.Path(outdir)
         outdir_path.mkdir(parents=True, exist_ok=True)
@@ -30,15 +32,17 @@ class MarkdownWriter:
         file_path = outdir_path / filename
 
         try:
-            # Read any existing frontmatter from the file
-            existing_data = self._read_existing_frontmatter(file_path)
+            # Read any existing frontmatter and content from the file
+            existing_post = self._read_existing_file(file_path)
 
-            # Merge data: existing values take precedence, new keys are added
-            # The order is important: frontmatter_data first, then existing_data
-            # This ensures existing values are preserved and only new keys are added
-            merged_data = {**frontmatter_data, **existing_data}
+            # Merge frontmatter data: existing values take precedence, new keys
+            # are added. Order is critical: frontmatter_data first, then
+            # existing_data overwrites. This preserves existing values and only
+            # adds missing keys
+            merged_metadata = {**frontmatter_data, **existing_post.metadata}
 
-            post = frontmatter.Post("", **merged_data)
+            # Create new post with merged metadata and preserved content
+            post = frontmatter.Post(existing_post.content, **merged_metadata)
             content = frontmatter.dumps(post)
 
             # Ensure there's a newline after the final frontmatter delimiter
@@ -54,13 +58,36 @@ class MarkdownWriter:
             self.logger.exception("Error writing file %s", file_path)
 
     @staticmethod
+    def _read_existing_file(file_path: pathlib.Path) -> frontmatter.Post:
+        """Read existing frontmatter and content from a file if it exists.
+
+        Returns a Post object with empty content and metadata if the file
+        doesn't exist or if frontmatter cannot be parsed. This ensures we can
+        always safely merge with new data.
+        """
+        logger = logging.getLogger(__name__)
+
+        if not file_path.exists():
+            return frontmatter.Post("")
+
+        try:
+            with file_path.open("r", encoding="utf-8") as file:
+                return frontmatter.load(file)
+        except (OSError, yaml.YAMLError):
+            logger.debug("Could not parse existing file %s", file_path)
+            return frontmatter.Post("")
+
+    @staticmethod
     def _read_existing_frontmatter(
         file_path: pathlib.Path,
     ) -> dict[str, typing.Any]:
         """Read existing frontmatter from a file if it exists.
 
         Returns an empty dictionary if the file doesn't exist or if frontmatter
-        cannot be parsed.
+        cannot be parsed. This ensures we can always safely merge with new data.
+
+        Note: This method is now deprecated in favor of _read_existing_file
+        which preserves both frontmatter and content.
         """
         logger = logging.getLogger(__name__)
 
