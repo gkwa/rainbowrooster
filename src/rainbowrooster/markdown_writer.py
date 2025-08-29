@@ -25,6 +25,9 @@ class MarkdownWriter:
         key-value pairs. If a key already exists in the file, its value will not
         be overwritten. New keys from frontmatter_data will be merged in if they
         don't exist. The existing content body of the file is preserved.
+
+        Only writes to disk if there are actual changes to avoid unnecessary
+        file system operations.
         """
         outdir_path = pathlib.Path(outdir)
         outdir_path.mkdir(parents=True, exist_ok=True)
@@ -41,21 +44,44 @@ class MarkdownWriter:
             # adds missing keys
             merged_metadata = {**frontmatter_data, **existing_post.metadata}
 
+            # Sort the frontmatter keys for consistent ordering
+            sorted_metadata = dict(sorted(merged_metadata.items()))
+
             # Create new post with merged metadata and preserved content
-            post = frontmatter.Post(existing_post.content, **merged_metadata)
-            content = frontmatter.dumps(post)
+            new_post = frontmatter.Post(existing_post.content, **sorted_metadata)
 
-            # Ensure there's a newline after the final frontmatter delimiter
-            if not content.endswith("\n"):
-                content += "\n"
+            # Check if there are any changes before writing
+            if self._has_changes(existing_post, new_post):
+                content = frontmatter.dumps(new_post)
 
-            with file_path.open("w", encoding="utf-8") as file:
-                file.write(content)
+                # Ensure there's a newline after the final frontmatter delimiter
+                if not content.endswith("\n"):
+                    content += "\n"
 
-            self.logger.info("Generated: %s", file_path)
+                with file_path.open("w", encoding="utf-8") as file:
+                    file.write(content)
+
+                self.logger.info("Generated: %s", file_path)
+            else:
+                self.logger.debug("No changes detected for: %s", file_path)
 
         except OSError:
             self.logger.exception("Error writing file %s", file_path)
+
+    @staticmethod
+    def _has_changes(
+        existing_post: frontmatter.Post, new_post: frontmatter.Post
+    ) -> bool:
+        """Check if there are any changes between existing and new post data.
+
+        Compares both content and metadata to determine if a file write is needed.
+        """
+        # Compare content
+        if existing_post.content != new_post.content:
+            return True
+
+        # Compare metadata (both keys and values)
+        return existing_post.metadata != new_post.metadata
 
     @staticmethod
     def _read_existing_file(file_path: pathlib.Path) -> frontmatter.Post:
