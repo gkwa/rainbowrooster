@@ -50,20 +50,22 @@ class MarkdownWriter:
             # Create new post with merged metadata and preserved content
             new_post = frontmatter.Post(existing_post.content, **sorted_metadata)
 
-            # Check if there are any changes before writing
-            if self._has_changes(existing_post, new_post):
-                content = frontmatter.dumps(new_post)
-
-                # Ensure there's a newline after the final frontmatter delimiter
-                if not content.endswith("\n"):
-                    content += "\n"
-
-                with file_path.open("w", encoding="utf-8") as file:
-                    file.write(content)
-
-                self.logger.info("Generated: %s", file_path)
-            else:
+            # Guard clause: exit early if no changes detected
+            if not self._has_changes(existing_post, new_post):
                 self.logger.debug("No changes detected for: %s", file_path)
+                return
+
+            # Write the file since changes were detected
+            content = frontmatter.dumps(new_post)
+
+            # Ensure there's a newline after the final frontmatter delimiter
+            if not content.endswith("\n"):
+                content += "\n"
+
+            with file_path.open("w", encoding="utf-8") as file:
+                file.write(content)
+
+            self.logger.info("Generated: %s", file_path)
 
         except OSError:
             self.logger.exception("Error writing file %s", file_path)
