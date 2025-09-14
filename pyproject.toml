@@ -3,13 +3,9 @@ name = "rainbowrooster"
 version = "0.1.0"
 description = "Generate test markdown files for products and stores with customizable frontmatter"
 readme = "README.md"
-authors = [
-    { name = "Taylor Monacelli", email = "taylormonacelli@gmail.com" }
-]
+authors = [{ name = "Taylor Monacelli", email = "taylormonacelli@gmail.com" }]
 requires-python = ">=3.12"
-dependencies = [
-    "python-frontmatter>=1.0.0"
-]
+dependencies = ["python-frontmatter>=1.0.0"]
 
 [project.scripts]
 rainbowrooster = "rainbowrooster:main"
@@ -22,11 +18,63 @@ build-backend = "hatchling.build"
 preview = true
 
 [tool.ruff.lint]
-select = ["F", "E", "W", "C90", "I", "N", "UP", "YTT", "ASYNC", "ASYNC1", "S", "FBT", "B", "A", "C4", "DTZ", "T10", "DJ", "EM", "EXE", "FA", "ISC", "ICN", "LOG", "G", "INP", "PIE", "T20", "PYI", "PT", "Q", "RSE", "RET", "SLF", "SLOT", "SIM", "TID", "INT", "ARG", "PTH", "TD", "FIX", "ERA", "PD", "PL", "C", "R", "TRY", "FLY", "NPY", "AIR", "RUF"]
+select = [
+  "F",
+  "E",
+  "W",
+  "C90",
+  "I",
+  "N",
+  "UP",
+  "YTT",
+  "ASYNC",
+  "ASYNC1",
+  "S",
+  "FBT",
+  "B",
+  "A",
+  "C4",
+  "DTZ",
+  "T10",
+  "DJ",
+  "EM",
+  "EXE",
+  "FA",
+  "ISC",
+  "ICN",
+  "LOG",
+  "G",
+  "INP",
+  "PIE",
+  "T20",
+  "PYI",
+  "PT",
+  "Q",
+  "RSE",
+  "RET",
+  "SLF",
+  "SLOT",
+  "SIM",
+  "TID",
+  "INT",
+  "ARG",
+  "PTH",
+  "TD",
+  "FIX",
+  "ERA",
+  "PD",
+  "PL",
+  "C",
+  "R",
+  "TRY",
+  "FLY",
+  "NPY",
+  "AIR",
+  "RUF",
+]
 extend-select = ["I"]
 extend-safe-fixes = ["F401", "F841"]
 
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-
