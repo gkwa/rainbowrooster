@@ -12,8 +12,8 @@ class FrontmatterBuilder:
         Replaces dots, hyphens, apostrophes, and spaces with underscores,
         converts to lowercase, and normalizes multiple underscores to single ones.
         """
-        # Replace dots, hyphens, apostrophes, and spaces with underscores
-        text = re.sub(r"[.\-\'\s]+", "_", text)
+        # Replace dots, hyphens, apostrophes, spaces, commas, and ampersands with underscores
+        text = re.sub(r"[.\-\'\s,&]+", "_", text)
         # Convert to lowercase
         text = text.lower()
         # Remove leading/trailing underscores
