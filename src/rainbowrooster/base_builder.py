@@ -50,7 +50,6 @@ class BaseBuilder:
         keys = [key for _, key, _ in cols]
 
         lines: list[str] = [
-            "filetype: product",
             "filters:",
             "  and:",
             '    - file.hasTag("product")',
@@ -79,7 +78,6 @@ class BaseBuilder:
         keys = [k for k, _ in pairs]
 
         lines: list[str] = [
-            "filetype: product",
             "filters:",
             "  and:",
             '    - file.hasTag("product")',

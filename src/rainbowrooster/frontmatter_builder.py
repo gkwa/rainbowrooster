@@ -17,7 +17,7 @@ class FrontmatterBuilder:
         These values will only be added if they don't already exist in the file.
         """
         frontmatter_data = existing_data.copy()
-        frontmatter_data["filetype"] = "product"
+        frontmatter_data["tags"] = ["product"]
 
         # Add a boolean field for each store, defaulting to False
         # These will be preserved if they already exist in the file
