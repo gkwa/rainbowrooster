@@ -1,5 +1,7 @@
 import logging
 
+import rainbowrooster.base_builder
+import rainbowrooster.base_writer
 import rainbowrooster.config
 import rainbowrooster.file_reader
 import rainbowrooster.filename_builder
@@ -18,6 +20,8 @@ class MarkdownGenerator:
             rainbowrooster.frontmatter_builder.FrontmatterBuilder()
         )
         self.markdown_writer = rainbowrooster.markdown_writer.MarkdownWriter()
+        self.base_builder = rainbowrooster.base_builder.BaseBuilder()
+        self.base_writer = rainbowrooster.base_writer.BaseWriter()
 
     def generate_files(self, config: rainbowrooster.config.Config) -> None:
         """Generate markdown files based on configuration."""
@@ -40,6 +44,8 @@ class MarkdownGenerator:
                 annotate_test=config.annotate_test,
             )
 
+        self._generate_base_files(stores, outdir=config.outdir)
+
     def _generate_product_file(
         self,
         product: str,
@@ -56,3 +62,21 @@ class MarkdownGenerator:
             stores, {}
         )
         self.markdown_writer.write_file(filename, frontmatter_data, outdir=outdir)
+
+    def _generate_base_files(self, stores: list[str], *, outdir: str) -> None:
+        """Generate the Obsidian Bases support files."""
+        self.base_writer.write_file(
+            "Shopping list.base",
+            self.base_builder.build_shopping_list_base(stores),
+            outdir=outdir,
+        )
+        self.base_writer.write_file(
+            "Shopping list 2.base",
+            self.base_builder.build_shopping_list_2_base(stores),
+            outdir=outdir,
+        )
+        self.base_writer.write_file(
+            "Shopping list 2.md",
+            self.base_builder.build_shopping_list_2_md(stores),
+            outdir=outdir,
+        )
