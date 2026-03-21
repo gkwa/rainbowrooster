@@ -1,27 +1,31 @@
-#+TITLE: rainbowrooster - Test Markdown Generator
+# rainbowrooster
 
-* Overview
-Python app that generates test markdown files for products and stores with customizable frontmatter.
+Generates markdown product files for an Obsidian vault, with frontmatter fields and
+section headers for each store. Also generates Obsidian Base configuration files for
+shopping list views.
 
-* Installation
-#+begin_src bash
-pip install rainbowrooster
-#+end_src
+Store list is sourced from buf.build/gkwa/heatedhornet (see github.com/gkwa/heatedhornet).
 
-* Usage
-#+begin_src bash
-# Generate markdown files from default text files
-rainbowrooster
+## installation
 
-# Use custom input files
-rainbowrooster --products custom_products.txt --stores custom_stores.txt
+```bash
+pipx install rainbowrooster
+```
 
-# Add test suffix to filenames
-rainbowrooster --annotate-test
+## usage
 
-# Enable verbose logging
-rainbowrooster -v
-
-# Show version
+```bash
+rainbowrooster --products myproducts.txt --outdir '/Users/mtm/Documents/Obsidian Vault'
+rainbowrooster --products myproducts.txt --outdir '/Users/mtm/Documents/Obsidian Vault' -v
+rainbowrooster --annotate-test --products myproducts.txt --outdir .
 rainbowrooster --version
-#+end_src
+```
+
+## updating the store list
+
+The store list comes from generated protobuf stubs in src/rainbowrooster/gen/. When
+heatedhornet adds a new store:
+
+1. buf generate (from this directory)
+2. git commit the regenerated stores_pb2.py
+3. pipx reinstall rainbowrooster
