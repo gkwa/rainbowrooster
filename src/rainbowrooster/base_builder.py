@@ -100,6 +100,7 @@ class BaseBuilder:
         lines.append(self._view_filter_block(keys, indent=4))
         lines += [
             "    order:",
+            "      - completed",
             "      - file.name",
             "      - formula.Stores",
             "    sort:",
