@@ -11,11 +11,21 @@ class BaseBuilder:
         pairs = [(rainbowrooster.snake_case.to_snake_case(s), s) for s in stores]
         return sorted(pairs, key=lambda p: p[0])
 
+    def _column_labels(self, count: int) -> list[str]:
+        """Return Excel-style column labels: A, B, ..., Z, AA, AB, ..."""
+        labels: list[str] = []
+        for first in [""] + list(string.ascii_uppercase):
+            for second in string.ascii_uppercase:
+                labels.append(first + second)
+                if len(labels) >= count:
+                    return labels
+        return labels
+
     def _assign_columns(self, stores: list[str]) -> list[tuple[str, str, str]]:
-        """Return (letter, snake_key, display_name) triples assigned A, B, C..."""
+        """Return (label, snake_key, display_name) triples assigned A, B, C, ..., AA, ..."""
         pairs = self._sorted_pairs(stores)
-        letters = list(string.ascii_uppercase)
-        return [(letters[i], key, name) for i, (key, name) in enumerate(pairs)]
+        labels = self._column_labels(len(pairs))
+        return [(labels[i], key, name) for i, (key, name) in enumerate(pairs)]
 
     def _stores_formula(self, stores: list[str]) -> str:
         """Build the cascaded if() chain for the Stores formula."""
