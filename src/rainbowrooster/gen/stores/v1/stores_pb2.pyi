@@ -36,6 +36,7 @@ class StoreId(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     STORE_ID_WALMART: _ClassVar[StoreId]
     STORE_ID_WHOLE_FOODS: _ClassVar[StoreId]
     STORE_ID_ALBERTSONS: _ClassVar[StoreId]
+    STORE_ID_EAST_AFRICAN_IMPORTS_AND_RESTAURANT: _ClassVar[StoreId]
 STORE_ID_UNSPECIFIED: StoreId
 STORE_ID_AMAZON_FRESH: StoreId
 STORE_ID_AMAZON_COM: StoreId
@@ -65,5 +66,6 @@ STORE_ID_WALGREENS: StoreId
 STORE_ID_WALMART: StoreId
 STORE_ID_WHOLE_FOODS: StoreId
 STORE_ID_ALBERTSONS: StoreId
+STORE_ID_EAST_AFRICAN_IMPORTS_AND_RESTAURANT: StoreId
 DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
 display_name: _descriptor.FieldDescriptor
