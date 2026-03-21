@@ -31,13 +31,6 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "--stores",
-        type=str,
-        default="stores.txt",
-        help="Path to stores file (default: stores.txt)",
-    )
-
-    parser.add_argument(
         "--outdir",
         type=str,
         default=".",
@@ -76,7 +69,6 @@ def main() -> None:
 
     config = rainbowrooster.config.Config(
         products_file=args.products,
-        stores_file=args.stores,
         outdir=args.outdir,
         annotate_test=args.annotate_test,
     )

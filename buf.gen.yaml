@@ -1,0 +1,8 @@
+version: v2
+inputs:
+  - module: buf.build/gkwa/heatedhornet
+plugins:
+  - remote: buf.build/protocolbuffers/python
+    out: src/rainbowrooster/gen
+  - remote: buf.build/protocolbuffers/pyi
+    out: src/rainbowrooster/gen

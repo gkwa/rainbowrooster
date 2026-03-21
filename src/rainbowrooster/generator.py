@@ -7,6 +7,7 @@ import rainbowrooster.file_reader
 import rainbowrooster.filename_builder
 import rainbowrooster.frontmatter_builder
 import rainbowrooster.markdown_writer
+import rainbowrooster.stores_loader
 
 
 class MarkdownGenerator:
@@ -26,7 +27,7 @@ class MarkdownGenerator:
     def generate_files(self, config: rainbowrooster.config.Config) -> None:
         """Generate markdown files based on configuration."""
         products = self.file_reader.read_lines(config.products_file)
-        stores = self.file_reader.read_lines(config.stores_file)
+        stores = rainbowrooster.stores_loader.load_stores()
 
         if not products:
             self.logger.warning("No products found to process")
