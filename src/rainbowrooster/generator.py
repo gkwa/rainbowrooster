@@ -68,16 +68,6 @@ class MarkdownGenerator:
         """Generate the Obsidian Bases support files."""
         self.base_writer.write_file(
             "Shopping list.base",
-            self.base_builder.build_shopping_list_base(stores),
-            outdir=outdir,
-        )
-        self.base_writer.write_file(
-            "Shopping list 2.base",
             self.base_builder.build_shopping_list_2_base(stores),
-            outdir=outdir,
-        )
-        self.base_writer.write_file(
-            "Shopping list 2.md",
-            self.base_builder.build_shopping_list_2_md(stores),
             outdir=outdir,
         )
