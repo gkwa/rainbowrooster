@@ -94,6 +94,12 @@ class BaseBuilder:
             "formulas:",
             f"  Stores: {self._stores_formula(stores)}",
             "views:",
+            "  - type: grocery-check",
+            "    name: Check Off",
+        ]
+        lines.append(self._view_filter_block(keys, indent=4))
+        lines += ["    sort: []"]
+        lines += [
             "  - type: table",
             "    name: Shopping Summary",
         ]
